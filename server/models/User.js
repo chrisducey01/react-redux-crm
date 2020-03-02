@@ -17,7 +17,7 @@ const userSchema = new Schema({
 
 userSchema.methods = {
 	checkPassword: function (inputPassword) {
-		return bcrypt.compareSync(inputPassword, this.local.password)
+		return bcrypt.compareSync(inputPassword, this.password)
 	},
 	hashPassword: plainTextPassword => {
 		return bcrypt.hashSync(plainTextPassword, 10)
@@ -26,10 +26,10 @@ userSchema.methods = {
 
 // MUST HASH BEFORE SAVE
 userSchema.pre('save', function (next) {
-	if (!this.local.password) {
+	if (!this.password) {
 		next()
 	} else {
-		this.local.password = this.hashPassword(this.local.password)
+		this.password = this.hashPassword(this.password)
 		next()
 	}
 })
