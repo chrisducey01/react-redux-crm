@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Container, FormGroup, FormLabel, Button, Col, Row } from 'react-bootstrap';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
@@ -26,11 +27,15 @@ function LoginUser() {
                 setSubmitting(false);
                 alert("Logged In");
                 resetForm();
+                setRedirect("/");
             })
-    }
+    };
+
+    const [redirect, setRedirect] = useState("");
 
     return (
         <Container>
+            {redirect ? <Redirect to={redirect} /> : null}
             <hr />
             <h3>Login User</h3>
             <hr />

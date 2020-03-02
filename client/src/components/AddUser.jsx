@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Container, FormGroup, FormLabel, Button, Col, Row } from 'react-bootstrap';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
@@ -51,11 +52,14 @@ function AddUser() {
                 setSubmitting(false);
                 alert("User added to db");
                 resetForm();
+                setRedirect("/login");
             })
-    }
+    };
+    const [ redirect, setRedirect ] = useState("");
 
     return (
         <Container>
+            { redirect ? <Redirect to={redirect} /> : null }
             <hr />
             <h3>Add New User</h3>
             <hr />
