@@ -4,6 +4,7 @@ import { Container, FormGroup, FormLabel, Button, Col, Row } from 'react-bootstr
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 // Define yup schema for how to validate form fields
@@ -15,6 +16,9 @@ const loginUserSchema = Yup.object().shape({
 });
 
 function LoginUser() {
+    const loggedIn = useSelector(state => state.loggedIn);
+    const dispatch = useDispatch();
+
     const handleSubmit = (values, actions) => {
         const { username, password } = values;
         const { setSubmitting, resetForm } = actions;
@@ -25,11 +29,18 @@ function LoginUser() {
         })
             .then(res => {
                 setSubmitting(false);
-                alert("Logged In");
+                // alert("Logged In");
                 resetForm();
-                setRedirect("/");
+                // setRedirect("/");
+                dispatch({type:"SUCCESSFUL_LOGIN"});
+            })
+            .catch(err=>{
+                setSubmitting(false);
+                resetForm();
+                dispatch({type:"INVALID_LOGIN"})
             })
     };
+
 
     const [redirect, setRedirect] = useState("");
 
@@ -38,6 +49,7 @@ function LoginUser() {
             {redirect ? <Redirect to={redirect} /> : null}
             <hr />
             <h3>Login User</h3>
+            <h5>Logged In: {loggedIn ? "True" : "False"}</h5>
             <hr />
             <Formik
                 initialValues={{
