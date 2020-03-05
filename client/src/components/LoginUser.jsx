@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, FormGroup, FormLabel, Button, Col, Row } from 'react-bootstrap';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
+import { updateUserLogin } from '../store/user';
 
 
 // Define yup schema for how to validate form fields
@@ -31,25 +32,21 @@ function LoginUser() {
                 setSubmitting(false);
                 // alert("Logged In");
                 resetForm();
-                // setRedirect("/");
-                dispatch({type:"SUCCESSFUL_LOGIN"});
+                dispatch(updateUserLogin(true,{user: values.username}));
             })
             .catch(err=>{
                 setSubmitting(false);
                 resetForm();
-                dispatch({type:"INVALID_LOGIN"})
+                dispatch(updateUserLogin(false,{}))
             })
     };
 
 
-    const [redirect, setRedirect] = useState("");
-
     return (
         <Container>
-            {redirect ? <Redirect to={redirect} /> : null}
+            {loggedIn ? <Redirect to="/" /> : null}
             <hr />
             <h3>Login User</h3>
-            <h5>Logged In: {loggedIn ? "True" : "False"}</h5>
             <hr />
             <Formik
                 initialValues={{
