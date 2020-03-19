@@ -6,19 +6,21 @@ import AddUser from './components/AddUser';
 import LoginUser from './components/LoginUser';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { updateUserLogin } from './store/user';
+import { userLogin, userLogout } from './store/user';
 import PrivateRoute from './components/PrivateRoute';
+import { customerUpdate } from './store/customer';
 
 function App() {
   const dispatch = useDispatch();
 
   //check if user is logged in
   useEffect(() => {
+    dispatch(customerUpdate({name: "Bobby Bonilla", type: "online"}));
     axios.get('/auth/user').then(response => {
       if (!!response.data.user) {
-        dispatch(updateUserLogin(true, response.data.user));
+        dispatch(userLogin(response.data.user));
       } else {
-        dispatch(updateUserLogin(false, {}));
+        dispatch(userLogout());
       }
     })
   });
@@ -27,7 +29,7 @@ function App() {
     event.preventDefault()
     axios.post('/auth/logout').then(response => {
       if (response.status === 200) {
-        dispatch(updateUserLogin(false, {}))
+        dispatch(userLogout())
       }
     })
   }
